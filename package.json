@@ -1,0 +1,46 @@
+{
+  "name": "udacity-project1-image-processing-api",
+  "version": "1.0.0",
+  "description": "**I have put some pictures of the experiment in a folder:public/images/original**",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run build && npm run jasmine",
+    "start": "nodemon src/index.ts",
+    "build": "npx tsc",
+    "lint": "eslint --ext .js'",
+    "prettier": "prettier --config .prettierrc '*.js' --write",
+    "jasmine": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dream-Team-Pro/Udacity-Project1-Image-Processing-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dream-Team-Pro/Udacity-Project1-Image-Processing-API/issues"
+  },
+  "homepage": "https://github.com/Dream-Team-Pro/Udacity-Project1-Image-Processing-API#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "jasmine-spec-reporter": "^7.0.0",
+    "sharp": "^0.30.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jasmine": "^4.0.3",
+    "@types/node": "^17.0.35",
+    "@types/sharp": "^0.30.2",
+    "@types/supertest": "^2.0.12",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jasmine": "^4.1.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2",
+    "supertest": "^6.2.3",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
+  }
+}
