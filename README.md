@@ -178,25 +178,14 @@ after that you can change width or height manualy, then the image will resized t
       //"exclude": ["node_modules", "./build", "spec"]
       "exclude": ["node_modules", "tests", "build", "spec"]
 
-40- Write a Basic Test. We'll start with a simple test: in index.ts
-    const myFunc = (num: number): number => {
-    return num * num;
-    };
-
-40- We can write a simple test for the function indexSpec.ts
-    import myFunc from '../index';
-    it('expect myFunc(5) to equal 25', () => {
-    expect(myFunc(5)).toEqual(25);
-    });   
-
-41- Add next code in package.json
+40- Add next code in package.json
     "test": "npx run build && npm run jasmine",
 
-42- Run the build script and then the test script
+41- Run the build script and then the test script
     $ npm run jasmine
     or $ npm run test
 
-43- Install supertest package to testing HTTP
+42- Install supertest package to testing HTTP
     $ npm i supertest
     $ npm install supertest --save-dev
 
