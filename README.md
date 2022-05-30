@@ -1,3 +1,8 @@
+**Instructions how to test this project:**
+to test this application: please click on any image on the home page to see the processing
+or please write it in url: "http://localhost:3000/images?filename=fish&width=100&height=100"
+after that you can change width or height manualy, then the image will resized to new params you wrote and will save in [public/images/resized] Directory
+
 **Steps to complete this project:**
 1- Initialize npm automatically select all defaults
     $ npm init -y 
@@ -50,6 +55,7 @@
 
 13- Installed Prettier
     $ npm i --save-dev prettier
+    <!-- $ npm run prettier-format -->
 
 14- Installed ESLint
     $ npm i --save-dev eslint
@@ -62,12 +68,11 @@
 
 17- Created scripts for both prettier and ESLint in package.json
     "lint": "eslint --ext .js'",
-    "prettier": "prettier --config .prettierrc '*.js' --write"
+    "prettier": "prettier --config .prettierrc '*.ts' --write"
 
 18- Run prettier and ESLint to find errors  then Fixed errors
     $ npm run lint
-
-
+    $ npm run prettier
 
 23- Add the Typescript configuration
     $ npx tsc --init

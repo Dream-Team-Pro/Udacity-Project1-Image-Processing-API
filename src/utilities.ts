@@ -1,13 +1,12 @@
-import { Request, Response, Application } from "express";
+import { Request, Response } from "express";
 import sharp from "sharp";
 import fs from "fs";
 import path from "path";
-const css_path = path.join(__dirname, "..", "/public/css/main.css");
 
 const imagesPath = path.join(__dirname, "..", "/public/images");
 
 /*----- Create Resized Image directory if not Exists  -----*/
-const createResizedImageDir = async (): Promise<void> => {
+const createResizedImageDir = async (): Promise<boolean> => {
   if (!fs.existsSync(imagesPath + "/resized/")) {
     fs.mkdir(imagesPath + "/resized/", (err) => {
       if (err) {
@@ -15,6 +14,7 @@ const createResizedImageDir = async (): Promise<void> => {
       }
     });
   }
+  return true;
 };
 
 /*----- Check Image is Valid by passing name, width, height -----*/
@@ -52,26 +52,13 @@ const imageHandler = async (req: Request, res: Response) => {
     const ResizedPath = imagesPath + `/resized/${filename}-${width}-${height}.jpg`;
     // check if file exists in Resized Directory, it means that image resized before. so it will be read only without resizing
     if (fs.existsSync(ResizedPath)) {
-      res.setHeader("content-type", "image/jpg");
-      // read file from Resized Path
-      fs.readFile(ResizedPath, (err, resized) => {
+      fs.readFile(ResizedPath, (err, resized) => {        
         res.end(resized);
       });
       // check if file exists in Full Directory only, it means that image not resized before. so it will be resizing
     } else if (imageExistsFull(filename)) {
       await resizeImage(filename, width, height);
-      res.setHeader("content-type", "image/jpg");
-      fs.readFile(ResizedPath, (err, resized) => {
-        // // code HTMl for second page after resized image with url parameters
-        // var response = '<div class="button2" href="/"><a class="button2" href="/">Home</a></div>'
-        // response += `<div class="contr"><h2>File resied successfully<br> it saved in [pubic/images/resized] folder</h2></div>`
-        // response += `<link rel="stylesheet" href="` + css_path + `">`
-        // response += `<div class="flex">`
-        // response += `<div class="polaroid">`
-        // response += `<img id="img" src="` + ResizedPath + `"style="width:100%">`
-        // response += `</div></div>`
-        // response += `</div>`
-        // return res.send(response)        
+      fs.readFile(ResizedPath, (err, resized) => { 
         res.end(resized);
       });
       // check if not of all cases above. it means that image not exists in any Directory. so it will send Exception Error
@@ -105,8 +92,7 @@ const resizeImage = async (
     await sharp(FullPath)
       .resize(Number(width), Number(height))
       .jpeg({ mozjpeg: true })
-      .toFile(ResizedPath, (err, info) => {
-        console.log("File has successfully resized.");
+      .toFile(ResizedPath, (err, info) => { 
       });
   } catch (error) {
     console.log(error);
