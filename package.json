@@ -7,9 +7,9 @@
     "test": "npm run build && npm run jasmine",
     "start": "nodemon src/index.ts",
     "build": "npx tsc",
-    "lint": "eslint --ext *.ts",
-    "jasmine": "jasmine",
-    "prettier": "prettier --config .prettierrc **/*.ts --write"
+    "lint": "eslint --fix src/**/*.ts",
+    "prettier": "prettier .prettierrc src/**/*.ts --write",
+    "jasmine": "jasmine"
   },
   "dependencies": {
     "express": "^4.18.1",

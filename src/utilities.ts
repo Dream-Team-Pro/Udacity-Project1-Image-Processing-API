@@ -110,8 +110,7 @@ const resizeImage = async (
     await sharp(FullPath)
       .resize(Number(width), Number(height))
       .jpeg({ mozjpeg: true })
-      .toFile(ResizedPath, (err, info) => { 
-      });
+      .toFile(ResizedPath)
   } catch (error) {
     console.log(error);
   }

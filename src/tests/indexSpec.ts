@@ -1,89 +1,82 @@
-import express from "express";
 import supertest from "supertest";
-const app: express.Application = express();
-
+import app from "../index";
 import fs from "fs";
 import path from "path";
 const request = supertest(app);
-import {
-  createResizedImageDir,
-  imageValid,
-  imageExistsFull,
-  resizeImage,
-  imageExistsResized
-} from "../utilities";
+import {createResizedImageDir} from "../utilities";
 
 const imagesPath = path.join(__dirname, "../..", "/public/images/");
 const FullPath = path.join(imagesPath, `/full/`);
 const ResizedPath = path.resolve(imagesPath, `resized/`);
 
-
-// console.log('eww', imagesPath);
-
 // jasmine unit testing
-/*----- check url parameters from user  -----*/
-describe('Test images endpoint', () => {
-  it('Image should exist in Resized Path', () => {
-    expect(fs.existsSync(`${ResizedPath}/fish-150-250.jpg`)).toBeTruthy();
-    console.log('RESIZED_PATH', ResizedPath);
-    
-  })
-  it('Image should not exist in Resized Path', () => {
-    expect(fs.existsSync(`${ResizedPath}/fish-50-200.jpg`)).toBeFalsy()
-  })
-})
-
-describe("test check Url parameters", () => {
-  it("should True because all url parameters entered", () => {
-    const check = imageValid("fish", 150, 250);
-    expect(check).toBeTrue();
+// Test a simple api endpoints
+describe("Test endpoint response", () => {
+  it("Gets the [/] endpoint", async () => {
+    const response = await request.get("/");
+    expect(response.status).toBe(200);
   });
 
-  it("should false because some url parameters are missing", () => {
-    const check = imageValid("fish", 100, 0);
-    expect(check).toBeFalse();
+  it("should True because filename parameter exists in full Directory", async () => {
+    await request.get("/api/images/?filename=fish");
+    expect(fs.existsSync(`${FullPath}/fish.jpg`)).toBeTruthy();
+  });
+
+  it("should False because filename parameter exists in full Directory", async () => {
+    await request.get("/api/images/?filename=frog");
+    expect(fs.existsSync(`${FullPath}/frog.jpg`)).toBeFalsy();
+  });
+
+  it("Gets the [api/images/] endpoint", async () => {
+    const response = await request.get(
+      "/api/images/?filename=fish&width=100&height=350"
+    );
+    expect(response.status).toBe(200);
+  });
+
+  it("Image after resized should exist in resized Directory", () => {
+    expect(fs.existsSync(`${ResizedPath}/fish-100-350.jpg`)).toBeTruthy();
+  });
+
+  it("Image is it not resized should not be exist in resized Directory", () => {
+    expect(fs.existsSync(`${ResizedPath}/fish-100-100.jpg`)).toBeFalsy();
   });
 });
 
-describe('Test if Image Exist', () => {
-  it('expect imageExistsResized defined ', () => {
-    expect(imageExistsResized).toBeDefined()
-  })
-
-  it('expect imageExistsResized return false with file name fish-150-250.jpg ', () => {
-    expect(imageExistsResized("fish", 150, 250) instanceof Promise).toBe(true)
-  })
-})
-
-/*----- check url parameters from user  -----*/
-describe("test check image Exists in Full path", () => {
-  it("should True because an image Exists in Full Directory", () => {
-    const check = imageExistsFull("fish");
-    expect(check).toBeTrue();
+describe("test check Url parameters", () => {
+  it("should True because all url parameters entered", async () => {
+    await request.get("/api/images/?filename=fish&width=100&height=350");
+    expect(fs.existsSync(`${ResizedPath}/fish-100-350.jpg`)).toBeDefined();
   });
 
-  it("should False because an image Doesn't Exist in Full Directory", () => {
-    const check = imageExistsFull("dog");
-    expect(check).toBeFalse();
+  it("should False because filename parameter does't found", async () => {
+    await request.get("/api/images/?filename=&width=100&height=350");
+    expect(fs.existsSync(`${ResizedPath}/fish-100-.jpg`)).toBeFalsy();
+  });
+
+  it("should False because width parameter does't found", async () => {
+    await request.get("/api/images/?filename=fish&width=&height=350");
+    expect(fs.existsSync(`${ResizedPath}/fish--350.jpg`)).toBeFalsy();
+  });
+
+  it("should False because height parameter does't found", async () => {
+    await request.get("/api/images/?filename=fish&width=100&height=");
+    expect(fs.existsSync(`${ResizedPath}/fish-100-.jpg`)).toBeFalsy();
   });
 });
 
 /*----- check to create Resized Directory if not Exists -----*/
 describe("test check create resized Directory", () => {
   it("should True because it's create resized Directory", () => {
-    createResizedImageDir()
-    .then( () => {
+    createResizedImageDir().then(() => {
       const check = imagesPath + "/resized/";
-      console.log("const", check);
       expect(fs.existsSync(check)).toBeTrue();
     });
   });
 
   it("should False because it's not create newDir Directory", () => {
-    createResizedImageDir()
-    .then( () => {
+    createResizedImageDir().then(() => {
       const check = imagesPath + "/newDir/";
-      console.log("const", check);
       expect(fs.existsSync(check)).toBeFalse();
     });
   });
