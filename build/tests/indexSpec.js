@@ -4,15 +4,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const supertest_1 = __importDefault(require("supertest"));
 const app = (0, express_1.default)();
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-// const request = supertest(app);
+const request = (0, supertest_1.default)(app);
 const utilities_1 = require("../utilities");
 const imagesPath = path_1.default.join(__dirname, "../..", "/public/images/");
-console.log('eww', imagesPath);
+const FullPath = path_1.default.join(imagesPath, `/full/`);
+const ResizedPath = path_1.default.resolve(imagesPath, `resized/`);
+// console.log('eww', imagesPath);
 // jasmine unit testing
 /*----- check url parameters from user  -----*/
+describe('Test images endpoint', () => {
+    it('Image should exist in Resized Path', () => {
+        expect(fs_1.default.existsSync(`${ResizedPath}/fish-150-250.jpg`)).toBeTruthy();
+        console.log('RESIZED_PATH', ResizedPath);
+    });
+    it('Image should not exist in Resized Path', () => {
+        expect(fs_1.default.existsSync(`${ResizedPath}/fish-50-200.jpg`)).toBeFalsy();
+    });
+});
 describe("test check Url parameters", () => {
     it("should True because all url parameters entered", () => {
         const check = (0, utilities_1.imageValid)("fish", 150, 250);
@@ -23,11 +35,12 @@ describe("test check Url parameters", () => {
         expect(check).toBeFalse();
     });
 });
-/*----- check if image was resized or not  -----*/
-describe("test check image is resized or not", () => {
-    it("should True because the image is resized", () => {
-        const check = (0, utilities_1.resizeImage)("fish", 150, 250);
-        expect(check).toEqual(check);
+describe('Test if Image Exist', () => {
+    it('expect imageExistsResized defined ', () => {
+        expect(utilities_1.imageExistsResized).toBeDefined();
+    });
+    it('expect imageExistsResized return false with file name fish-150-250.jpg ', () => {
+        expect((0, utilities_1.imageExistsResized)("fish", 150, 250) instanceof Promise).toBe(true);
     });
 });
 /*----- check url parameters from user  -----*/

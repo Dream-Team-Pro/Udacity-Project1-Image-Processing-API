@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sharp from "sharp";
-import fs from "fs";
+import fs from "fs-extra";
 import path from "path";
 
 const imagesPath = path.join(__dirname, "..", "/public/images");
@@ -23,10 +23,10 @@ const imageValid = (
   width: number,
   height: number
 ): boolean => {
-  if (filename !== "" && width !== 0 && height !== 0) {
-    return true;
-  } else {
+  if (filename == "" || isNaN(width) || width == 0 ||  isNaN(height) || height == 0) {
     return false;
+  } else {
+    return true;
   }
 };
 
@@ -39,6 +39,24 @@ const imageExistsFull = (filename: string): boolean => {
     return false;
   }
 };
+
+const imageExistsResized = async (
+  filename: string,
+  width: number,
+  height: number
+): Promise<boolean> => {
+  const ResizedPath = imagesPath + `/resized/`;
+  const ResizedFullPath = `${ResizedPath}/${filename}_${width}_${height}.jpg`
+  try {
+    // check if the folder resized exists, if not create it
+    await fs.ensureDir(ResizedPath)
+    // Test the given path exists with the file system
+    const isProcessedImageExists: boolean = await fs.pathExists(ResizedFullPath)
+    return isProcessedImageExists
+  } catch (error) {
+    throw new Error('File not exists in the output folder')
+  }
+}
 
 /*----- check Handling cases of image   -----*/
 const imageHandler = async (req: Request, res: Response) => {
@@ -105,4 +123,5 @@ export {
   imageExistsFull,
   imageHandler,
   resizeImage,
+  imageExistsResized
 };

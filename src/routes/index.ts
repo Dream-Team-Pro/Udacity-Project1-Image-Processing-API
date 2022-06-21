@@ -3,6 +3,6 @@ import { imageHandler } from "../utilities";
 const routes: express.Router = express.Router();
 
 routes.use(express.static("public"));
-routes.get("/images", imageHandler);
+routes.get("/api/images", imageHandler);
 
 export default routes;

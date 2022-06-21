@@ -9,7 +9,7 @@ after that you can change width or height manualy, then the image will resized t
 
 2- Install type definitions for express
     $ npm install express                   // it's save to dependencies
-    $ npm i --save-dev @types/express       // it's save to devDependencies
+    $ npm i --save-dev @types/express       // it's save to devDependencies    
 
 3- Install an image resize libraries like sharp
     $ npm i sharp
